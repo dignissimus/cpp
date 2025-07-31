@@ -1,7 +1,11 @@
+#include <concepts>
 #include <iostream>
+#include <concepts>
+#include <functional>
 
-template
-<typename T>
+template <typename T>
+requires std::strict_weak_order<std::less<T>, T, T>
+  && std::copyable<T>
 struct Singleton {
   T value;
   Singleton(const Singleton& singleton) : Singleton(singleton.value) {}
@@ -36,6 +40,15 @@ struct Singleton {
     return !(right < left);
   }
 };
+
+
+template<typename T>
+concept SingletonLike = requires(T a, T b) {
+  { a == b } -> std::convertible_to<bool>;
+  { a < b } -> std::convertible_to<bool>;
+  { a.value };
+};
+static_assert(SingletonLike<Singleton<int>>);
 
 int main() {
   Singleton<int> singleton{5};
