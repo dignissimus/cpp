@@ -7,6 +7,7 @@ requires
 std::copyable<T>
 && std::copyable<U>
 && std::strict_weak_order<std::less<T>, T, T>
+&& std::strict_weak_order<std::less<U>, U, U>
 && std::equality_comparable<T>
 && std::equality_comparable<U>
 struct Pair{
