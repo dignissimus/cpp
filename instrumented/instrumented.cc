@@ -1,6 +1,7 @@
 #include <vector>
 #include <utility>
 #include <algorithm>
+#include <iostream>
 
 
 struct InstrumentedBase {
@@ -10,6 +11,7 @@ struct InstrumentedBase {
   inline static int destructor_count{};
   inline static int copy_assignment_count{};
   inline static int move_assignment_count{};
+  inline static int comparison_count{};
 
 };
 
@@ -39,10 +41,16 @@ struct Instrumented : InstrumentedBase {
       value = std::move(other.value);
       ++move_assignment_count;
     }
-    return &*this;
+    return *this;
+  }
+  friend bool operator<(const Instrumented<T>& left, const Instrumented<T>& right) {
+    ++comparison_count;
+    return left.value < right.value;
   }
 };
 
 int main() {
   std::vector<Instrumented<int>> v{1, 2, 3, 4};
+  std::sort(v.begin(), v.end());
+  std::cout << InstrumentedBase::comparison_count << std::endl;
 }
