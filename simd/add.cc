@@ -51,7 +51,7 @@ int main() {
   double simd_sum = _mm_cvtsd_f64(simd_reduction);
 
   for (; rindex < result.size(); ++rindex) {
-    simd_sum += result[index];
+    simd_sum += result[rindex];
   } 
   std::cout
     << std::format(
